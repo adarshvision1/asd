@@ -1,0 +1,565 @@
+1
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.model
+_
+selection import train
+test
+_
+_
+split
+from sklearn.linear
+_
+model import LinearRegression
+from sklearn.metrics import mean
+_
+squared
+error
+_
+# Dataset
+data = {
+"Size (sq ft)": [1500, 2000, 2500, 3000, 3500],
+"Bedrooms": [3, 4, 4, 5, 5],
+"Age (years)": [10, 15, 20, 25, 30],
+"Price (USD)": [300000, 400000, 500000, 600000, 700000]
+}
+df = pd.DataFrame(data)
+# Split data
+X = df[["Size (sq ft)"
+,
+"Bedrooms"
+,
+"Age (years)"]]
+y = df["Price (USD)"]
+X
+train, X
+_
+_
+test, y_
+train, y_
+test = train
+test
+_
+_
+split(X, y, test
+size=0.2, random
+_
+_
+state=42)
+# Train model
+model = LinearRegression().fit(X
+_
+train, y_
+train)
+# Predict
+pred = model.predict(X
+_
+test)
+# Evaluate
+print("Predicted:"
+, pred)
+print("Actual :"
+, y_
+test.values)
+print("MSE:"
+, round(mean
+_
+squared
+_
+error(y_
+test, pred), 2))
+# Visualize
+plt.scatter(y_
+test, pred)
+plt.plot([y_
+test.min(), y_
+test.max()], [y_
+test.min(), y_
+test.max()],
+plt.xlabel("Actual Prices")
+plt.ylabel("Predicted Prices")
+plt.title("Actual vs Predicted Prices")
+plt.show()
+'r')
+2
+from collections import deque
+# Graph (Adjacency List)
+graph = {
+'A': ['B'
+,
+'B': ['D'
+,
+'C'],
+'E'],
+'C': ['F'],
+'D': [],
+'E': ['F'],
+'F': []
+}
+# BFS Traversal
+def bfs(start):
+visited, queue = set(), deque([start])
+order = []
+while queue:
+node = queue.popleft()
+if node not in visited:
+visited.add(node)
+order.append(node)
+queue.extend(graph[node])
+return order
+# DFS Traversal
+def dfs(start, visited=None):
+if visited is None:
+visited = set()
+visited.add(start)
+print(start, end=" ")
+for neighbor in graph[start]:
+if neighbor not in visited:
+dfs(neighbor, visited)
+# Driver code
+print("BFS:"
+, bfs('A')) # ['A'
+,
+'B'
+,
+print("DFS:"
+, end=" ")
+dfs('A') # A B D E F C
+'C'
+,
+'D'
+,
+'E'
+,
+'F']
+3
+import heapq
+def heuristic(a, b):
+return abs(a[0]-b[0]) + abs(a[1]-b[1])
+def a
+_
+star(grid, start, goal):
+rows, cols = len(grid), len(grid[0])
+open
+_
+set = [(0, start)]
+came
+_
+from, g, f = {}, {start: 0}, {start: heuristic(start, goal)}
+while open
+set:
+_
+_, current = heapq.heappop(open
+_
+if current == goal:
+path = []
+while current in came
+from:
+_
+path.append(current)
+current = came
+_
+from[current]
+return [start] + path[::-1]
+set)
+for dr, dc in [(0,1),(1,0),(0,
+-1),(-1,0)]:
+nr, nc = current[0]+dr, current[1]+dc
+if 0<=nr<rows and 0<=nc<cols and grid[nr][nc]==0:
+neighbor = (nr, nc)
+new
+_g = g[current] + 1
+if new
+_g < g.get(neighbor, float('inf')):
+came
+_
+from[neighbor] = current
+g[neighbor] = new
+_g
+f[neighbor] = new
+_g + heuristic(neighbor, goal)
+heapq.heappush(open
+_
+set, (f[neighbor], neighbor))
+return None
+# Example
+grid = [
+[0,1,0,0,0],
+[0,1,0,1,0],
+[0,0,0,1,0],
+[1,1,0,0,0],
+[0,0,0,1,0]
+]
+path = a
+_
+star(grid, (0,0), (4,4))
+print("Path found:" if path else "No path found.
+"
+, path)
+4
+import os
+board = [" "] * 10 # positions 1–9
+player, game = 1, True
+def draw():
+print(f"\n {board[1]} | {board[2]} | {board[3]} ")
+print("
+-----------
+")
+print(f" {board[4]} | {board[5]} | {board[6]} ")
+print("
+-----------
+")
+print(f" {board[7]} | {board[8]} | {board[9]} \n")
+def win():
+wins = [(1,2,3),(4,5,6),(7,8,9),
+(1,4,7),(2,5,8),(3,6,9),
+(1,5,9),(3,5,7)]
+return any(board[a]==board[b]==board[c]!=" " for a,b,c in wins)
+print("Tic-Tac-Toe\nPlayer 1 [X] vs Player 2 [O]\n")
+while game:
+draw()
+try:
+mark = "X" if player % 2 else "O"
+move = int(input(f"Player {player%2 or 2} ({mark}), choose [1-9]: "))
+if board[move] == " ":
+board[move] = mark
+if win():
+draw(); print(f"Player {player%2 or 2} Wins!"); break
+if " " not in board[1:]:
+draw(); print("It's a Draw!"); break
+player += 1
+else:
+print("Invalid move, try again.
+")
+except (ValueError, IndexError):
+print("Enter a number between 1–9.
+")
+5
+# Basic logic functions
+def AND(p, q): return p and q
+def OR(p, q): return p or q
+def NOT(p): return not p
+def IMPLIES(p, q): return (not p) or q
+# Knowledge base
+P = True
+Q = IMPLIES(P, True) R = IMPLIES(Q, True) # P → Q
+# Q → R
+print("Knowledge Base Results:")
+print("P:"
+, P,
+"Q:"
+, Q,
+"R:"
+, R)
+# Example rule: P OR Q → R
+P, Q = False, True
+R = OR(P, Q)
+print("\nRule: P OR Q → R")
+print("P:"
+, P,
+"Q:"
+, Q,
+"P OR Q:"
+, OR(P, Q),
+"R:"
+, R)
+# Implication Example
+P, Q = True, False
+print("\nImplication Example:")
+print("P:"
+, P,
+"Q:"
+, Q,
+"P → Q:"
+, IMPLIES(P, Q))
+6
+from kanren import Relation, facts, run, var
+# Define parent relation
+parent = Relation()
+facts(parent,
+("John"
+,
+("Mary"
+,
+("Alice"
+,
+"Mary"),
+"Alice"),
+"Bob"))
+# Declare variables
+x = var()
+y = var()
+z = var()
+# Grandparent rule
+def grandparent(x, z):
+return (parent(x, y), parent(y, z))
+# Query: Who is the grandparent of Bob?
+results = run(1, x, grandparent(x,
+"Bob"))
+print("Grandparent of Bob:"
+, results)
+7
+import networkx as nx
+import matplotlib.pyplot as plt
+# Graph + relations
+G = nx.DiGraph()
+relations = [
+("Socrates"
+"Human"
+,
+,
+"is-a"),
+("Human"
+"Mortal"
+,
+,
+"is-a"),
+("Dog"
+"Animal"
+,
+,
+"is-a"),
+("Animal"
+,
+"LivingBeing"
+,
+"is-a"),
+("Dog"
+"Tail"
+,
+,
+"has-part")
+]
+G.add
+_
+edges
+_
+from([(a, b, {"relation": r}) for a, b, r in relations])
+# Draw
+pos = nx.spring_
+layout(G)
+nx.draw(G, pos, with
+labels=True, node
+_
+_
+color="lightblue"
+, node
+_
+nx.draw
+networkx
+_
+_
+edge
+_
+labels(G, pos, edge
+_
+labels=nx.get
+_
+edge
+_
+font
+_
+color="red")
+plt.title("Semantic Network")
+plt.show()
+size=2000, font
+attributes(G,
+_
+weight="bold")
+"relation"),
+8
+def medical
+_
+diagnosis():
+print("Welcome to the Medical Diagnosis Expert System")
+print("Please answer the following questions with 'yes' or 'no'\n")
+# Collect symptoms
+symptoms = {}
+for symptom in ["fever"
+,
+"cough"
+"sore throat"
+,
+,
+"runny nose"
+,
+"headache"
+,
+symptoms[symptom] = input(f"Do you have {symptom}? ").strip().lower()
+"body aches"]:
+# Diagnosis rules
+if symptoms["fever"] == "yes" and symptoms["cough"] == "yes" and symptoms["body aches"]
+== "yes":
+diagnosis = "Flu"
+elif symptoms["runny nose"] == "yes" and symptoms["sore throat"] == "yes":
+diagnosis = "Common Cold"
+elif symptoms["fever"] == "yes" and symptoms["headache"] == "yes" and symptoms["sore
+throat"] == "yes":
+diagnosis = "Viral Infection"
+elif symptoms["cough"] == "yes" and symptoms["sore throat"] == "yes" and symptoms["fever"]
+== "no":
+diagnosis = "Throat Infection"
+else:
+diagnosis = "Symptoms are inconclusive. Please consult a doctor.
+"
+print(f"\nDiagnosis: You may have {diagnosis}.
+")
+# Run the system
+medical
+_
+diagnosis()
+9
+import nltk
+from nltk.tokenize import word
+tokenize
+_
+from nltk.corpus import stopwords
+from nltk.stem import PorterStemmer
+# Download resources once
+nltk.download('punkt')
+nltk.download('stopwords')
+# Input text
+text = "Natural Language Processing is a crucial part of Artificial Intelligence. It deals with
+human language.
+"
+# 1. Tokenization
+tokens = word
+_
+tokenize(text)
+print("1. Tokens:\n"
+, tokens)
+# 2. Stop-word Removal
+stop_
+words = set(stopwords.words('english'))
+filtered
+_
+tokens = [word for word in tokens if word.lower() not in stop_
+words]
+print("\n2. Filtered Tokens:\n"
+, filtered
+_
+tokens)
+# 3. Stemming
+stemmer = PorterStemmer()
+stemmed
+_
+words = [stemmer.stem(word) for word in filtered
+_
+print("\n3. Stemmed Words:\n"
+, stemmed
+_
+words)
+tokens]
+10
+import speech
+_
+recognition as sr
+# Initialize recognizer
+recognizer = sr.Recognizer()
+with sr.Microphone() as source:
+print("🎤 Please speak something...
+")
+recognizer.adjust
+for
+ambient
+_
+_
+_
+noise(source) # reduce ambient noise
+audio = recognizer.listen(source)
+try:
+print("⏳ Recognizing...
+")
+text = recognizer.recognize
+_google(audio)
+print("✅ You said:"
+, text)
+except sr.UnknownValueError:
+print("❌ Could not understand audio.
+")
+except sr.RequestError:
+print("❌ Could not request results. Check your internet connection.
+")
+11
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.model
+_
+selection import train
+test
+_
+_
+split
+from sklearn.linear
+_
+model import LinearRegression
+from sklearn.metrics import mean
+_
+squared
+error
+_
+# Dataset
+data = {
+"Size (sq ft)": [1500, 2000, 2500, 3000, 3500],
+"Bedrooms": [3, 4, 4, 5, 5],
+"Age (years)": [10, 15, 20, 25, 30],
+"Price (USD)": [300000, 400000, 500000, 600000, 700000]
+}
+df = pd.DataFrame(data)
+# Split data
+X = df[["Size (sq ft)"
+,
+"Bedrooms"
+,
+"Age (years)"]]
+y = df["Price (USD)"]
+X
+train, X
+_
+_
+test, y_
+train, y_
+test = train
+test
+_
+_
+split(X, y, test
+size=0.2, random
+_
+_
+state=42)
+# Train model
+model = LinearRegression().fit(X
+_
+train, y_
+train)
+# Predict
+pred = model.predict(X
+_
+test)
+# Evaluate
+print("Predicted:"
+, pred)
+print("Actual :"
+, y_
+test.values)
+print("MSE:"
+, round(mean
+_
+squared
+_
+error(y_
+test, pred), 2))
+# Visualize
+plt.scatter(y_
+test, pred)
+plt.plot([y_
+test.min(), y_
+test.max()], [y_
+test.min(), y_
+test.max()],
+plt.xlabel("Actual Prices")
+plt.ylabel("Predicted Prices")
+plt.title("Actual vs Predicted Prices")
+plt.show()
+'r')
