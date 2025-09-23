@@ -1,364 +1,259 @@
-1
-def is_prime(n):
-    if n <= 1: return False
-    for i in range(2, int(n**0.5)+1):
-        if n % i == 0: return False
-    return True
-
-n = int(input("Enter a number: "))
-print(f"{n} is{' ' if is_prime(n) else ' not '}a prime number.")
-
-def is_prime(n):
-    if n <= 1: return False
-    for i in range(2, int(n**0.5)+1):
-        if n % i == 0: return False
-    return True
-
-def generate_primes(start, end):
-    return [n for n in range(start, end+1) if is_prime(n)]
-
-s, e = map(int, input("Enter start and end: ").split())
-print("Primes:", generate_primes(s, e))
-
-a, b = map(int, input("Enter two numbers: ").split())
-while b: a, b = b, a % b
-print("GCD is", a)
-
-import math
-nums = list(map(int, input("Enter numbers: ").split()))
-g = nums[0]
-for n in nums[1:]: g = math.gcd(g, n)
-print("GCD is", g)
-
-
-
-
-
-
-2
-# Step 1: Input scores
-scores = list(map(int, input("Enter scores separated by space: ").split()))
-n = len(scores)
-
-# Step 2: Mean
-mean = sum(scores) / n
-# Step 3: Sort (bubble sort not needed, just use sorted)
-scores.sort()
-# Step 4: Median
-median = (scores[n//2] if n % 2 else (scores[n//2 - 1] + scores[n//2]) / 2)
-# Step 5: Max and Min
-maximum, minimum = max(scores), min(scores)
-
-# Step 6: Standard Deviation
-variance = sum((x - mean) ** 2 for x in scores) / n
-std_dev = variance ** 0.5
-
-# Step 7: Grade Classification
-def assign_grade(x):
-    return 'A' if x >= 90 else 'B' if x >= 80 else 'C' if x >= 70 else 'D' if x >= 60 else 'F'
-
-grades = [assign_grade(x) for x in scores]
-
-# Step 8: Display Results
-print("\n--- Statistical Results ---")
-print(f"Mean: {mean:.2f}")
-print(f"Median: {median}")
-print(f"Maximum: {maximum}")
-print(f"Minimum: {minimum}")
-print(f"Standard Deviation: {std_dev:.2f}")
-
-print("\n--- Grade Classification ---")
-for i, (score, grade) in enumerate(zip(scores, grades), 1):
-    print(f"Student {i}: Score = {score}, Grade = {grade}")
-
-3
-import numpy as np
-from PIL import Image
-import matplotlib.pyplot as plt
-
-# Load and convert image to grayscale
-img = Image.open("example.jpg").convert("L")
-img_array = np.array(img)
-
-# Invert image
-inverted_img = 255 - img_array
-
-# Display
-plt.subplot(1, 2, 1), plt.imshow(img_array, cmap="gray"), plt.title("Original"), plt.axis("off")
-plt.subplot(1, 2, 2), plt.imshow(inverted_img, cmap="gray"), plt.title("Inverted"), plt.axis("off")
-plt.show()
-
-
-import numpy as np
-import matplotlib.pyplot as plt
-
-# Simulated grayscale image (gradient)
-img_array = np.tile(np.arange(256, dtype=np.uint8), (100, 1))
-
-# Apply threshold
-T = 150
-binary_img = np.where(img_array > T, 255, 0).astype(np.uint8)
-
-# Display
-plt.subplot(1, 2, 1), plt.imshow(img_array, cmap="gray"), plt.title("Original"), plt.axis("off")
-plt.subplot(1, 2, 2), plt.imshow(binary_img, cmap="gray"), plt.title(f"Thresholded (T={T})"), plt.axis("off")
-plt.show()
-
-import numpy as np
-from PIL import Image
-import matplotlib.pyplot as plt
-from scipy.ndimage import convolve
-
-# Load grayscale image
-img = Image.open("example.jpg").convert("L")
-img_array = np.array(img)
-
-# Sobel kernels
-sobel_x = np.array([[-1,0,1],[-2,0,2],[-1,0,1]])
-sobel_y = np.array([[-1,-2,-1],[0,0,0],[1,2,1]])
-
-# Convolution
-gx, gy = convolve(img_array, sobel_x), convolve(img_array, sobel_y)
-
-# Gradient magnitude
-edges = np.hypot(gx, gy)
-edges = np.clip(edges, 0, 255).astype(np.uint8)
-
-# Display
-plt.subplot(1, 2, 1), plt.imshow(img_array, cmap="gray"), plt.title("Original"), plt.axis("off")
-plt.subplot(1, 2, 2), plt.imshow(edges, cmap="gray"), plt.title("Sobel Edges"), plt.axis("off")
-plt.show()
-
-
-4
-import numpy as np
-
-# 2x2 System
-A = np.array([[2, 3], [1, -1]])
-B = np.array([8, 2])
-X = np.linalg.solve(A, B)
-print("2x2 Solution:", X)
-
-5
-# T-Test Example (Raw + Summary, no input)
-from scipy import stats; import math
-
-# --- Raw Data Example ---
-g1 = [12,14,15,16,15]   # Group 1 values
-g2 = [10,11,13,12,14]   # Group 2 values
-t,p = stats.ttest_ind(g1, g2, equal_var=True)
-print(f"[Raw] T={t:.3f}, P={p:.3f}")
-
-# --- Summary Data Example ---
-m1,s1,n1 = 14.4,1.5,5   # mean, std, n for group 1
-m2,s2,n2 = 12.0,1.6,5   # mean, std, n for group 2
-def t_test_summary(m1,s1,n1,m2,s2,n2,equal):
-    if equal:
-        v=((n1-1)*s1**2+(n2-1)*s2**2)/(n1+n2-2)
-        se,df=math.sqrt(v*(1/n1+1/n2)),n1+n2-2
-    else:
-        se=math.sqrt(s1**2/n1+s2**2/n2)
-        df=(s1**2/n1+s2**2/n2)**2/(((s1**2/n1)**2)/(n1-1)+((s2**2/n2)**2)/(n2-1))
-    t=(m1-m2)/se; p=2*(1-stats.t.cdf(abs(t),df))
-    return t,p,df
-
-t,p,df = t_test_summary(m1,s1,n1,m2,s2,n2,True)
-print(f"[Summary] T={t:.3f}, P={p:.3f}, df={df:.1f}")
-print("Reject H0" if p<0.05 else "Accept H0")
-
-# Chi-Square Example (no input)
-import numpy as np; from scipy.stats import chi2_contingency
-
-obs = np.array([[10,20,30],
-                [6,9,17]])   # Example contingency table
-
-chi2,p,dof,exp = chi2_contingency(obs)
-print(f"Chi2={chi2:.3f}, P={p:.3f}, df={dof}\nExp=\n{exp}")
-print("Reject H0" if p<0.05 else "Accept H0")
-
-6
-
-import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score, confusion_matrix
-
-# Dataset
-data = {
-    'Hours_Studied': [5, 3, 8, 2, 7, 4],
-    'Attendance':    [1, 1, 1, 0, 1, 0],
-    'Passed':        [1, 0, 1, 0, 1, 0]
-}
-df = pd.DataFrame(data)
-
-# Features & Target
-X = df[['Hours_Studied', 'Attendance']]
-y = df['Passed']
-
-# Train-test split
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
-
-# Model training
-model = LogisticRegression()
-model.fit(X_train, y_train)
-
-# Predictions
-y_pred = model.predict(X_test)
-
-# Evaluation
-print("Model Accuracy:", accuracy_score(y_test, y_pred))
-print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
-
-print("\n--- Predict Student Performance ---")
-try:
-    hrs = float(input("Enter hours studied: "))
-    att = int(input("Enter attendance (1 for Present, 0 for Absent): "))
-    user_input = pd.DataFrame([[hrs, att]], columns=['Hours_Studied', 'Attendance'])
-    
-    prediction = model.predict(user_input)[0]
-    print("Prediction:", "PASS" if prediction == 1 else "FAIL")
-
-except ValueError:
-    print("Invalid input! Please enter numeric values only.")
-
-7
-import pandas as pd
-
-# Load data
-df = pd.read_csv("sales.csv")
-
-# Handle missing values
-df.fillna(0, inplace=True)
-
-# Pivot table: total Sales per Region
-report = df.pivot_table(index='Region', values='Sales', aggfunc='sum')
-print(report)
-
-
-
-8
-# Example 1: From CSV
-import pandas as pd, matplotlib.pyplot as plt
-df = pd.read_csv("covid.csv", parse_dates=['Date'], index_col='Date')
-df['Cases'].plot(label='Daily'); df['Cases'].rolling(7).mean().plot(label='7-Day Avg')
-plt.legend(); plt.title("COVID-19 Trend"); plt.show()
-
-# Example 2: From Raw Data
-import pandas as pd, matplotlib.pyplot as plt, seaborn as sns
-data = {'Date': pd.date_range('2021-01-01', periods=30),
-        'Cases': [100,120,130,125,140,150,180,160,170,165,200,210,220,230,
-                  250,240,260,280,300,290,320,310,330,350,370,360,380,390,400,420]}
-df = pd.DataFrame(data); df['Avg'] = df['Cases'].rolling(7).mean()
-sns.lineplot(x='Date', y='Cases', data=df, label='Daily')
-sns.lineplot(x='Date', y='Avg', data=df, label='7-Day Avg', color='r')
-plt.title('COVID-19 Cases'); plt.xticks(rotation=45); plt.show()
-
-9
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-from sklearn.cluster import KMeans
-from sklearn.preprocessing import StandardScaler
-
-# Step 1: Create dataset
-data = {
-    'CustomerID': [1,2,3,4,5,6,7,8,9,10],
-    'Annual Income (k$)': [15,16,17,18,45,46,47,80,82,85],
-    'Spending Score (1-100)': [39,81,6,77,40,42,87,20,79,17]
-}
-df = pd.DataFrame(data)
-print(df)
-
-# Step 2: Select features
-X = df[['Annual Income (k$)', 'Spending Score (1-100)']].values
-
-# Step 3: Standardize
-scaler = StandardScaler()
-X_scaled = scaler.fit_transform(X)
-
-# Step 4: Elbow method
-inertia = []
-for k in range(1, 11):
-    model = KMeans(n_clusters=k, random_state=42)
-    model.fit(X_scaled)
-    inertia.append(model.inertia_)
-
-plt.plot(range(1, 11), inertia, marker='o')
-plt.xlabel("Number of Clusters (K)")
-plt.ylabel("WCSS (Inertia)")
-plt.title("Elbow Method (Synthetic Data)")
-plt.show()
-
-# Step 5: Apply KMeans
-kmeans = KMeans(n_clusters=3, random_state=42)
-clusters = kmeans.fit_predict(X_scaled)
-df['Cluster'] = clusters
-print(df)
-
-# Step 6: Visualize clusters
-plt.figure(figsize=(8,6))
-sns.scatterplot(x=X_scaled[:,0], y=X_scaled[:,1],
-                hue=clusters, palette='Set2', s=100)
-plt.scatter(kmeans.cluster_centers_[:,0], kmeans.cluster_centers_[:,1],
-            s=300, c='red', marker='X', label='Centroids')
-plt.xlabel("Annual Income (scaled)")
-plt.ylabel("Spending Score (scaled)")
-plt.title("Customer Segmentation (Synthetic Data)")
-plt.legend()
-plt.show()
-
-10
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-import numpy as np
-
-# Dataset
-data = {
-    'Category': ['A', 'B', 'C', 'D', 'E'],
-    'Value1': [25, 40, 30, 35, 20],
-    'Value2': [15, 20, 25, 10, 30]
-}
-df = pd.DataFrame(data)
-
-# Bar Chart
-plt.figure(figsize=(8,6))
-sns.barplot(x='Category', y='Value1', data=df)
-plt.title('Bar Chart'); plt.show()
-
-# Pie Chart
-plt.figure(figsize=(8,8))
-plt.pie(df['Value2'], labels=df['Category'], autopct='%1.1f%%', startangle=90)
-plt.title('Pie Chart'); plt.show()
-
-# Scatter Plot
-plt.figure(figsize=(8,6))
-plt.scatter(df['Value1'], df['Value2'], c='blue', marker='o')
-plt.title('Scatter Plot'); plt.xlabel('Value1'); plt.ylabel('Value2')
-plt.show()
-
-# Histogram
-plt.figure(figsize=(8,6))
-plt.hist(df['Value1'], bins=np.arange(15, 45, 5), edgecolor='black')
-plt.title('Histogram'); plt.xlabel('Value1'); plt.ylabel('Frequency')
-plt.show()
-
-# Countplot with Hue (example: hue=Value2 > 20)
-plt.figure(figsize=(8,6))
-sns.countplot(x='Category', hue=(df['Value2'] > 20), data=df)
-plt.title('Countplot with Hue'); plt.show()
-
-# Heatmap of Correlation Matrix
-plt.figure(figsize=(6,4))
-sns.heatmap(df[['Value1','Value2']].corr(), annot=True, cmap='coolwarm', fmt='.2f')
-plt.title('Correlation Heatmap'); plt.show()
-
-# Scatterplot with Regression Line
-plt.figure(figsize=(8,6))
-sns.regplot(x='Value1', y='Value2', data=df, scatter_kws={'s':80}, line_kws={'color':'red'})
-plt.title('Scatterplot with Regression Line'); plt.show()
-
-
-
-
-
+Basic Counter with Handler Function
+
+JavaScript
+import React, { useState } from 'react';
+
+const App = () => {
+  const [count, setCount] = useState(0);
+
+  const ValueUpdater = () => {
+    setCount(count + 1);
+  };
+
+  return (
+    <div>
+      <h3>React</h3>
+      <p>{count}</p>
+      <button onClick={ValueUpdater}>Increment</button>
+    </div>
+  );
+};
+Multiple State Variables
+
+JavaScript
+import React, { useState } from 'react';
+
+const App = () => {
+  const [count, setCount] = useState(0);
+  const [negative, setNegative] = useState(0);
+
+  const ValueUpdater1 = () => {
+    setNegative(negative - 1);
+  };
+
+  return (
+    <div>
+      <h3>React</h3>
+      <p>{count} --- {negative}</p>
+      <button onClick={() => setCount(count + 1)}>Increment</button>
+      <button onClick={ValueUpdater1}>Negative</button>
+    </div>
+  );
+};
+Controlled Form Inputs
+
+JavaScript
+import { useState } from 'react';
+
+const App = () => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+
+  return (
+    <form onSubmit={() => alert('Form submitted')}>
+      <input
+        placeholder='Name'
+        type="text"
+        name="name"
+        value={name}
+        onBlur={() => console.log('Input field lost focus')}
+        onChange={(e) => setName(e.target.value)}
+        required
+      />
+      <input
+        placeholder='Email'
+        type="email"
+        name="email"
+        value={email}
+        onBlur={() => console.log('Input field lost focus')}
+        onChange={(e) => setEmail(e.target.value)}
+        required
+      />
+      <input type="submit" value="Submit" />
+      <h1>{name}</h1>
+      <h1>{email}</h1>
+    </form>
+  );
+};
+
+export default App;
+useEffect - Running on Specific State Change
+
+JavaScript
+import React, { useEffect, useState } from 'react';
+
+const App = () => {
+  const [count, setCount] = useState(0);
+  const [c100, setC100] = useState(100);
+
+  useEffect(() => {
+    console.log(`Count has changed to: ${count}`);
+    console.log(`Above 100 Count has changed to: ${c100}`);
+  }, [count]);
+
+  return (
+    <div>
+      <h1>Count: {count}</h1>
+      <button onClick={() => setCount(count + 1)}>Increment</button>
+      <h1>Above 100: {c100}</h1>
+      <button onClick={() => setC100(c100 + 1)}>Increment</button>
+    </div>
+  );
+};
+useEffect - Running Once on Mount
+
+JavaScript
+import React, { useEffect, useState } from 'react';
+
+const App = () => {
+  const [count, setCount] = useState(0);
+  const [c100, setC100] = useState(100);
+
+  // This effect runs whenever 'count' changes
+  useEffect(() => {
+    console.log(`Count has changed to: ${count}`);
+  }, [count]);
+
+  // This effect runs only once on component mount
+  useEffect(() => {
+    console.log('Component mounted!');
+  }, []);
+
+  return (
+    <div>
+      <h1>Count: {count}</h1>
+      <button onClick={() => setCount(count + 1)}>Increment</button>
+      <h1>Above 100: {c100}</h1>
+      <button onClick={() => setC100(c100 + 1)}>Increment</button>
+    </div>
+  );
+};
+useEffect - Cleanup with setInterval
+
+JavaScript
+import React, { useEffect, useState } from 'react';
+
+const Login = () => {
+  const [timer, setTimer] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      console.log('Interval running');
+      setTimer((prevTimer) => prevTimer + 1);
+    }, 1000);
+
+    // Cleanup function
+    return () => {
+      clearInterval(interval);
+      console.log('Interval cleared');
+    };
+  }, []); // Empty array ensures this runs only on mount and unmount
+
+  return (
+    <div>
+      <h1>Timer: {timer}</h1>
+    </div>
+  );
+};
+Component Composition - Passing Basic Props
+
+JavaScript
+// App.jsx (Parent)
+import Login from './Pages/Login';
+
+const App = () => {
+  return (
+    <div>
+      <Login Log="1234" />
+    </div>
+  );
+};
+
+// Login.jsx (Child)
+import React from 'react';
+
+const Login = (props) => {
+  // const {Log} = props; // Destructuring props
+  return (
+    <div>
+      <h3>Login page</h3>
+      <p>props value : {props.Log}</p>
+    </div>
+  );
+};
+
+export default Login;
+Component Composition - Using props.children
+
+JavaScript
+// App.jsx (Parent)
+import Login from './Pages/Login';
+
+const App = () => {
+  return (
+    <div>
+      <Login>
+        <h2>Login component 1</h2>
+        <h2>Login component 2</h2>
+        <h2>Login component 3</h2>
+      </Login>
+    </div>
+  );
+};
+
+export default App;
+
+
+// Login.jsx (Child)
+import React from 'react';
+
+const Login = (props) => {
+  return (
+    <div>
+      <h3>Login page</h3>
+      <h1>{props.children}</h1>
+    </div>
+  );
+};
+
+export default Login;
+List Rendering with .map() & Conditional Rendering with &&
+
+JavaScript
+import { useState } from 'react';
+
+// map and conditional rendering
+const App = () => {
+  const [arr, setArr] = useState([1, 2, 3, 4, 5]);
+
+  return (
+    <div>
+      {arr.map((value, index) => (
+        <p key={index}>{value}</p>
+      ))}
+      <button onClick={() => setArr([...arr, 6])}>Add</button>
+      {true && <h1>Hello</h1>}
+    </div>
+  );
+};
+Conditional Rendering with a Ternary Operator
+
+JavaScript
+import React, { useState } from 'react';
+
+const App = () => {
+  const [count, setCount] = useState(0);
+  const [visible, setVisible] = useState(false);
+
+  return (
+    <div>
+      <h3>React</h3>
+      <p>{count}</p>
+      <button onClick={() => setCount(count + 1)}>Increment</button>
+      <button onClick={() => setVisible(!visible)}>Show</button>
+      {visible ? <h3>Hello Students</h3> : <h3>Nothing</h3>}
+    </div>
+  );
+};
+
+export default App;
